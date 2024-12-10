@@ -5,5 +5,8 @@ const FilmsController = require("../controllers/FilmsController.js");
 // index
 router.get("/", FilmsController.index);
 
+// show
+router.get("/:id", FilmsController.show)
+
 
 module.exports = router
