@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const connection = require("./database/connection.js");
+const FilmsRouter = require("./routes/films.js");
 
 const PORT = process.env.PORT || 3009;
 const HOST = process.env.HOST || "http://localhost";
@@ -11,7 +12,6 @@ app.listen(PORT, () => {
     console.log(`server is running at ${HOST}:${PORT}`)
 });
 
-// index
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
+// router
+app.use("/api/films", FilmsRouter);
+
