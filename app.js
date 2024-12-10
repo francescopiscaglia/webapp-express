@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const connection = require("./database/connection.js");
 const FilmsRouter = require("./routes/films.js");
 
 const PORT = process.env.PORT || 3009;
