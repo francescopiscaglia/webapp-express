@@ -11,3 +11,6 @@ connection.connect(err => {
     if (err) throw err;
     console.log("DB connect");
 });
+
+
+module.exports = connection

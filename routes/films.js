@@ -1,9 +1,28 @@
 const express = require("express");
 const router = express.Router();
+const connection = require("../database/connection.js");
 
 // index
 router.get("/", (req, res) => {
-    res.send("Hello World");
+
+    // query
+    const sql = `SELECT * FROM movies`;
+
+    // connect
+    connection.query(sql, (err, results) => {
+
+        // err
+        if (err) return res.status(500).json({ err: "Internal server error" });
+
+        // not found
+        if (results.length === 0) return res.status(404).json({ err: "Films not found" });
+
+        // results
+        res.json({
+            films: results,
+            counter: results.length
+        });
+    });
 });
 
 
