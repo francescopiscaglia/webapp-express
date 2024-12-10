@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const FilmsRouter = require("./routes/films.js");
+const NotFound = require("./middlewares/NotFound.js");
+const ServerErrors = require("./middlewares/ServerErrors.js");
 
 const PORT = process.env.PORT || 3009;
 const HOST = process.env.HOST || "http://localhost";
@@ -13,4 +15,10 @@ app.listen(PORT, () => {
 
 // router
 app.use("/api/films", FilmsRouter);
+
+// Not found middleware
+app.use(NotFound);
+
+// server middleware
+app.use(ServerErrors);
 

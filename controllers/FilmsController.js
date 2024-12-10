@@ -51,8 +51,7 @@ const show = (req, res) => {
             if (err) return res.status(500).json({ err: "Internal server error" });
 
             const movieReview = results;
-            const textReview = [];
-            movieReview.map(movie => textReview.push(movie.text));
+            const textReview = movieReview.map(movie => movie.text);
 
             // results
             res.json({
