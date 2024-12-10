@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const connection = require("./database/connection.js");
 
 const PORT = process.env.PORT || 3009;
 const HOST = process.env.HOST || "http://localhost";
