@@ -64,8 +64,8 @@ const show = (req, res) => {
 
 // create
 const create = (req, res) => {
-    const { id } = req.params;
 
+    const { id } = req.params;
     const { vote, name, text } = req.body;
 
     const sql = `INSERT INTO reviews SET movie_id = ?, vote = ?, name = ?, text = ?`;
@@ -81,8 +81,8 @@ const create = (req, res) => {
 
 // destroy
 const destroy = (req, res) => {
-    const { id } = req.params
 
+    const { id } = req.params
     const sql = `DELETE FROM reviews WHERE id = ?`;
 
     connection.query(sql, [id], (err, results) => {
