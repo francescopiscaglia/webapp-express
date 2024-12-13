@@ -79,9 +79,23 @@ const create = (req, res) => {
 };
 
 
+// destroy
+const destroy = (req, res) => {
+    const { id } = req.params
+
+    const sql = `DELETE FROM reviews WHERE id = ?`;
+
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: err })
+        res.json({ success: true })
+    });
+};
+
+
 
 module.exports = {
     index,
     show,
-    create
+    create,
+    destroy
 };

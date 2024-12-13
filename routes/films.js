@@ -11,5 +11,7 @@ router.get("/:id", FilmsController.show);
 // create
 router.post("/:id/review", FilmsController.create);
 
+// delete
+router.delete("/:id/review", FilmsController.destroy)
 
 module.exports = router
