@@ -13,11 +13,9 @@ app.use(express.json());
 
 
 // start the server
-app.listen(PORT, () => {
-    console.log(`server is running at ${HOST}:${PORT}`)
-});
+app.listen(PORT, () => { console.log(`server is running at ${HOST}:${PORT}`) });
 
-// router
+// routers
 app.use("/api/films", FilmsRouter);
 
 // Not found middleware

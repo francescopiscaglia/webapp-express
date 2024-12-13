@@ -6,7 +6,10 @@ const FilmsController = require("../controllers/FilmsController.js");
 router.get("/", FilmsController.index);
 
 // show
-router.get("/:id", FilmsController.show)
+router.get("/:id", FilmsController.show);
+
+// create
+router.post("/:id/review", FilmsController.create);
 
 
 module.exports = router

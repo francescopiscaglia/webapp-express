@@ -29,7 +29,7 @@ const show = (req, res) => {
 
     // query
     const sql = `SELECT * FROM movies WHERE id = ?`;
-    const reviewsSql = `SELECT * FROM reviews WHERE movie_id = ?`;
+    const reviewsSql = `SELECT * FROM reviews WHERE movie_id = ? ORDER BY created_at DESC`;
 
     // get the ID
     const { id } = req.params;
@@ -62,8 +62,26 @@ const show = (req, res) => {
 };
 
 
+// create
+const create = (req, res) => {
+    const { id } = req.params;
+
+    const { vote, name, text } = req.body;
+
+    const sql = `INSERT INTO reviews SET movie_id = ?, vote = ?, name = ?, text = ?`;
+
+    connection.query(sql, [id, vote, name, text], (err, results) => {
+        if (err) return res.status(500).json({ error: err })
+
+        // return success
+        res.json({ success: true })
+    });
+};
+
+
 
 module.exports = {
     index,
-    show
+    show,
+    create
 };
