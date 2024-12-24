@@ -68,6 +68,19 @@ const create = (req, res) => {
     const { id } = req.params;
     const { vote, name, text } = req.body;
 
+    // data validation
+    if (!vote || isNaN(vote)) {
+        return res.status(400).json({ error: "Please insert a valid review vote" });
+    };
+
+    if (!name || name.length > 100) {
+        return res.status(400).json({ error: "Please insert your name (max 100 characters" });
+    };
+
+    if (!text || text.length > 500) {
+        return res.status(400).json({ error: "Please insert a valid review (max 500 characters" });
+    };
+
     const sql = `INSERT INTO reviews SET movie_id = ?, vote = ?, name = ?, text = ?`;
 
     connection.query(sql, [id, vote, name, text], (err, results) => {
