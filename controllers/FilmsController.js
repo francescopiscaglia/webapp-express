@@ -2,63 +2,57 @@ const connection = require("../database/connection.js");
 
 
 // index
-const index = (req, res) => {
+const index = async (req, res) => {
 
     // query
     const sql = `SELECT * FROM movies`;
 
-    // connect
-    connection.query(sql, (err, results) => {
+    try {
+        const [results] = await connection.promise().query(sql);
 
-        // err
-        if (err) return res.status(500).json({ err: "Internal server error" });
-        // not found
-        if (results.length === 0) return res.status(404).json({ err: "Films not found" });
+        if (results.length === 0) return res.status(404).json({ Error: "Films not found" });
 
         // results
         res.json({
             films: results,
             counter: results.length
         });
-    });
+
+    } catch (error) {
+        res.status(500).json({ Error: "Internal server error" });
+    };
 };
 
 
 // show
-const show = (req, res) => {
+const show = async (req, res) => {
 
     // query
     const sql = `SELECT * FROM movies WHERE id = ?`;
     const reviewsSql = `SELECT * FROM reviews WHERE movie_id = ? ORDER BY created_at DESC`;
 
-    // get the ID
-    const { id } = req.params;
+    try {
 
-    // connect
-    connection.query(sql, [id], (err, results) => {
+        // get the ID
+        const { id } = req.params;
 
-        // err
-        if (err) return res.status(500).json({ err: "Internal server error" });
-        // not found
-        if (results.length === 0) return res.status(404).json({ err: "Movie not found" });
+        const [movieResults] = await connection.promise().query(sql, [id]);
 
-        const movieFound = results[0];
+        if (movieResults.length === 0) return res.status(404).json({ Error: "Movie not found" });
 
-        // reviews connect
-        connection.query(reviewsSql, [id], (err, results) => {
+        const movie = movieResults[0];
 
-            // err
-            if (err) return res.status(500).json({ err: "Internal server error" });
+        const [reviews] = await connection.promise().query(reviewsSql, [id]);
 
-            const movieReview = results;
-
-            // results
-            res.json({
-                movie: movieFound,
-                review: movieReview
-            });
+        res.status(200).json({
+            movie: movie,
+            review: reviews
         });
-    });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ Error: "Internal server error" });
+    }
 };
 
 
