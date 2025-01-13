@@ -19,6 +19,7 @@ const index = async (req, res) => {
         });
 
     } catch (error) {
+        console.error(error);
         res.status(500).json({ Error: "Internal server error" });
     };
 };
@@ -57,45 +58,52 @@ const show = async (req, res) => {
 
 
 // create
-const create = (req, res) => {
+const create = async (req, res) => {
 
-    const { id } = req.params;
-    const { vote, name, text } = req.body;
+    try {
+        const { id } = req.params;
+        const { vote, name, text } = req.body;
 
-    // data validation
-    if (!vote || isNaN(vote)) {
-        return res.status(400).json({ error: "Please insert a valid review vote" });
-    };
+        // data validation
+        if (!vote || isNaN(vote) || vote < 1 || vote > 5) {
+            return res.status(400).json({ error: "Please insert a valid review vote between 1 and 5" });
+        };
 
-    if (!name || name.length > 100) {
-        return res.status(400).json({ error: "Please insert your name (max 100 characters" });
-    };
+        if (!name || name.length > 100) {
+            return res.status(400).json({ error: "Please insert your name (max 100 characters" });
+        };
 
-    if (!text || text.length > 500) {
-        return res.status(400).json({ error: "Please insert a valid review (max 500 characters" });
-    };
+        if (!text || text.length > 500) {
+            return res.status(400).json({ error: "Please insert a valid review (max 500 characters" });
+        };
 
-    const sql = `INSERT INTO reviews SET movie_id = ?, vote = ?, name = ?, text = ?`;
+        const sql = `INSERT INTO reviews (movie_id, vote, name, text) VALUES (?, ?, ?, ?)`;
 
-    connection.query(sql, [id, vote, name, text], (err, results) => {
-        if (err) return res.status(500).json({ error: err })
+        const [results] = await connection.promise().query(sql, [id, vote, name, text]);
 
         // return success
-        res.json({ success: true })
-    });
+        res.status(201).json({ success: true })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ Error: "Internal server error" });
+    };
 };
 
 
 // destroy
-const destroy = (req, res) => {
+const destroy = async (req, res) => {
 
-    const { id } = req.params
-    const sql = `DELETE FROM reviews WHERE id = ?`;
+    try {
+        const { id } = req.params
+        const sql = `DELETE FROM reviews WHERE id = ?`;
 
-    connection.query(sql, [id], (err, results) => {
-        if (err) return res.status(500).json({ error: err })
-        res.json({ success: true })
-    });
+        const [results] = await connection.promise().query(sql, [id]);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ Error: "Internal server error" })
+    };
 };
 
 
