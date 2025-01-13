@@ -2,8 +2,11 @@ const express = require("express");
 const router = express.Router();
 const FilmsController = require("../controllers/FilmsController.js");
 
-// index
+// movies index
 router.get("/", FilmsController.index);
+
+// categories index
+router.get("/categories", FilmsController.CategoriesIndex);
 
 // show
 router.get("/:id", FilmsController.show);

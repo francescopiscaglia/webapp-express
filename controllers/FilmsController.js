@@ -1,7 +1,7 @@
 const connection = require("../database/connection.js");
 
 
-// index
+// movies index
 const index = async (req, res) => {
 
     // query
@@ -15,6 +15,43 @@ const index = async (req, res) => {
         // results
         res.json({
             films: results,
+            counter: results.length
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ Error: "Internal server error" });
+    };
+};
+
+// categories index
+const CategoriesIndex = async (req, res) => {
+
+    // query
+    const sql = `SELECT * FROM movies`;
+
+    try {
+        const [results] = await connection.promise().query(sql);
+
+        if (results.length === 0) return res.status(404).json({ Error: "Films not found" });
+
+        // Raggruppa i film per categoria
+        const groupedByCategory = results.reduce((acc, movie) => {
+            const category = movie.genre; // Usa il campo category per il raggruppamento
+
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push({
+                id: movie.id,
+                title: movie.title
+            });
+            return acc;
+        }, {});
+
+        // Risposta
+        res.json({
+            films: groupedByCategory,
             counter: results.length
         });
 
@@ -112,5 +149,6 @@ module.exports = {
     index,
     show,
     create,
-    destroy
+    destroy,
+    CategoriesIndex
 };
